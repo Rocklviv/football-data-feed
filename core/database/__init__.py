@@ -7,6 +7,7 @@ class Database():
     self.mongoPort = 27017
     self.client = MongoClient(self.mongoHost, self.mongoPort)
     self.db = self.client['football_data']
+    self.collection = None
 
   def set_collection(self, collection):
     self.collection = self.db[collection]
@@ -21,14 +22,10 @@ class Database():
   def update_one(self, data):
     pass
 
-  def insert_one(self):
-    pass
+  def insert_one(self, data):
+    res = self.collection.insert(data)
+    if res:
+      print(res)
 
   def insert_many(self, data):
-    try:
-      if self.get_one(data['id']):
-        self.update_one(data)
-      else:
-        print(data)
-    except Exception as e:
-      print(str(e))
+    self.collection.insert_many(data)

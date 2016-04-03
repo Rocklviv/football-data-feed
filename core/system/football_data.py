@@ -8,7 +8,7 @@ class FootballData():
     :return:
     """
     self.server = '''http://api.football-data.org/v1'''
-    self.apiKey = '''3c11ec48825a43998874d5b2388f0030'''
+    self.apiKey = '''e5c181096e7944b2af6fbdbe91eadf3b'''
 
   def set_api_key(self, key):
     """
@@ -40,13 +40,13 @@ class FootballData():
     }
     if args:
       for value in args:
-        self.server = "%s/%s" % (self.server, value)
+        server = "%s/%s" % (self.server, value)
 
     try:
       if method == "POST":
-        req = requests.post(self.server, headers)
+        req = requests.post(server, headers=headers)
       else:
-        req = requests.get(self.server, headers)
+        req = requests.get(server, headers=headers)
       if req.status_code == 200:
         return req.text
       else:
