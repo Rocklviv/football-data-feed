@@ -12,8 +12,9 @@ def runApp():
   #df.getTeams()
   #print('Waiting 60 sec.')
   #sleep(60)
-  print('Getting squads by team.')
-  df.getSquads()
+  #print('Getting squads by team.')
+  #df.getSquads()
+  df.getFixtures()
 
 if __name__ == '__main__':
   runApp()

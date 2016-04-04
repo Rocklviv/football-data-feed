@@ -47,3 +47,15 @@ class FootballDataModel(Database):
       result = self.insert_one(data)
       if result:
         return result.inserted_id
+
+  def setLeagueFixtures(self, data):
+    ids = self.get_one(data['id'])
+    for i in ids:
+      if i['id'] != data['id']:
+        result = self.insert_one(data)
+        if result:
+          return result.inserted_id
+    else:
+      result = self.insert_one(data)
+      if result:
+        return result.inserted_id
