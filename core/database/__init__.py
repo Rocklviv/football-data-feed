@@ -13,7 +13,17 @@ class Database():
     self.collection = self.db[collection]
 
   def get_one(self, id):
+    """
+
+    @deprecated
+    :param id:
+    :return:
+    """
     result = self.collection.find({'id': id})
+    return result
+
+  def get_one_new(self, string):
+    result = self.collection.find(string)
     return result
 
   def get_many(self):

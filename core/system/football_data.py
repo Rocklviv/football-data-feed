@@ -1,6 +1,8 @@
+import time
 import requests
 
 class FootballData():
+  # TODO: Make all API calls with timeouts.
 
   def __init__(self):
     """
@@ -9,6 +11,9 @@ class FootballData():
     """
     self.server = '''http://api.football-data.org/v1'''
     self.apiKey = '''e5c181096e7944b2af6fbdbe91eadf3b'''
+    self.cooldown = 60
+    self.maxRPM = 50
+    self.timeout = float(self.cooldown / self.maxRPM)
 
   def set_api_key(self, key):
     """
@@ -43,10 +48,8 @@ class FootballData():
         server = "%s/%s" % (self.server, value)
 
     try:
-      if method == "POST":
-        req = requests.post(server, headers=headers)
-      else:
-        req = requests.get(server, headers=headers)
+      time.sleep(self.timeout)
+      req = requests.request(method, server, headers=headers)
       if req.status_code == 200:
         return req.text
       else:

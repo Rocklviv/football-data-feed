@@ -52,30 +52,29 @@ class FootballDataController():
 
     :return:
     """
-    data = {}
-    count = 0
     self.model.setCollection('teams')
     result = self.model.getTeamsId()
     for i in result:
-      count += 1
-      if count == 30:
-        sleep(60)
-        print('Squads: Waiting 60 sec due to %s requests overdue.' % count)
-        data = json.loads(self.dataApi.api_call('GET', 'teams/%s/players' % i['id']))
-        count = 0
-      else:
-        data = json.loads(self.dataApi.api_call('GET', 'teams/%s/players' % i['id']))
+      data = json.loads(self.dataApi.api_call('GET', 'teams/%s/players' % i['id']))
       self.__process_squads(i['id'], data)
 
   def getFixtures(self):
-    data = {}
-    count = 0
     self.model.setCollection('leagues')
     result = self.model.getLeagueIds()
     for i in result:
       data = json.loads(self.dataApi.api_call('GET', 'soccerseasons/%s/fixtures?season=2015' % i['id']))
       self.__process_fixtures(i['id'], data)
       self.__process_results(data)
+
+  def getTeamById(self):
+    """
+    Debugging function
+    :return:
+    """
+    self.model.setCollection('teams')
+    result = self.model.get_one(254)
+    for i in result:
+      print(i)
 
   def __process_teams(self, league_id, data):
     """
@@ -86,6 +85,7 @@ class FootballDataController():
     """
     self.model.setCollection('teams')
     pattern = 'http://api.football-data.org/v1/teams/'
+    teamsList = []
 
     for i in data['teams']:
       teams = {}
@@ -96,7 +96,9 @@ class FootballDataController():
       teams['shortName'] = i['shortName']
       teams['squadMarketValue'] = i['squadMarketValue']
       teams['crestUrl'] = i['crestUrl']
-      self.model.setLeagueTeams(teams)
+      teamsList.append(teams)
+
+    self.model.setLeagueTeams(teamsList)
 
 
   def __process_squads(self, team_id, data):
@@ -107,6 +109,7 @@ class FootballDataController():
     :return:
     """
     self.model.setCollection('squads')
+    squadsList = []
 
     for i in data['players']:
       players = {}
@@ -118,7 +121,8 @@ class FootballDataController():
       players['nationality'] = i['nationality']
       players['contractUntil'] = i['contractUntil']
       players['marketValue'] = i['marketValue']
-      self.model.setTeamPlayers(players)
+      squadsList.append(players)
+    self.model.setTeamPlayers(squadsList)
 
 
   def __process_fixtures(self, league_id, data):
@@ -141,4 +145,11 @@ class FootballDataController():
 
 
   def __process_results(self, data):
-    pass
+    self.model.setCollection('fixture_results')
+    fix_id_pattern = 'http://api.football-data.org/v1/fixtures/'
+
+    for i in data['fixtures']:
+      results = {}
+      results['id'] = int(i['_links']['self']['href'].replace(fix_id_pattern, ''))
+      results['result'] = i['result']
+      self.model.setLeagueResults(results)
