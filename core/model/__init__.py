@@ -19,7 +19,7 @@ class FootballDataModel(Database):
       if result.count() == 1:
         for v in result:
           if v['lastUpdated'] != i['lastUpdated']:
-            self.update_one(i)
+            self.update_one(v['_id'], i)
           else:
             log.info('League ID: %s, Name: %s is up to date.' % (i['id'], i['caption']))
       else:
@@ -57,9 +57,11 @@ class FootballDataModel(Database):
       else:
         for v in result:
           if v['name'] == i['name']:
-            log.info('Player %s from Team: %s is already in database.' % (i['name'], i['team_id']))
-          else:
-            self.update_one(i)
+            if v['team_id'] == i['team_id']:
+              log.info('Player %s from Team: %s is already in database.' % (i['name'], i['team_id']))
+            else:
+              log.info('Updating player %s info because of transfer to another team %s' % (v['name'], i['team_id']))
+              self.update_one(v['_id'], i)
 
 
   def setLeagueFixtures(self, data):

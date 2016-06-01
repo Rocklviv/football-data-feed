@@ -1,3 +1,4 @@
+import json
 import logging
 from pymongo import MongoClient
 
@@ -32,13 +33,17 @@ class Database():
   def get_many(self):
     pass
 
-  def update_one(self, data):
-    pass
+  def update_one(self, objectId, data):
+    res = self.collection.update({ '_id': objectId }, {"$set": data }, upsert=False)
+    if res.modified_count == 0:
+      log.error('Nothing was update. Player ID: %s, DATA: %s' % (objectId, json.loads(data)))
+    else:
+      log.info('Document ID: %s was successfully updated' % objectId)
 
   def insert_one(self, data):
     res = self.collection.insert_one(data)
     if res:
-      log.info("[INFO][insert_one] %s" % res.inserted_id)
+      log.info("Inserted ID: %s" % res.inserted_id)
 
   def insert_many(self, data):
     self.collection.insert_many(data)
