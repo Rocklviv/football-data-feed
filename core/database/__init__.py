@@ -3,7 +3,7 @@ from pymongo import MongoClient
 class Database():
 
   def __init__(self):
-    self.mongoHost = '192.168.99.100' # Windows docker toolbox have IP: 192.168.99.100
+    self.mongoHost = 'localhost' # Windows docker toolbox have IP: 192.168.99.100
     self.mongoPort = 27017
     self.client = MongoClient(self.mongoHost, self.mongoPort)
     self.db = self.client['football_data']
@@ -33,9 +33,9 @@ class Database():
     pass
 
   def insert_one(self, data):
-    res = self.collection.insert(data)
+    res = self.collection.insert_one(data)
     if res:
-      print(res)
+      print "[INFO][insert_one] %s" % res.inserted_id
 
   def insert_many(self, data):
     self.collection.insert_many(data)

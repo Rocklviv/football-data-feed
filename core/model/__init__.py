@@ -55,27 +55,35 @@ class FootballDataModel(Database):
 
 
   def setLeagueFixtures(self, data):
+    """
+
+    :param data:
+    :return:
+    """
     ids = self.get_one(data['id'])
-    for i in ids:
-      if i['id'] != data['id']:
-        result = self.insert_one(data)
-        if result:
-          return result.inserted_id
-      else:
-        result = self.insert_one(data)
-        if result:
-          return result.inserted_id
+    if ids.count() != 0:
+      for i in ids:
+        if i['id'] != data['id']:
+          result = self.insert_one(data)
+          if result:
+            return result.inserted_id
+    else:
+      result = self.insert_one(data)
+      if result:
+        return result.inserted_id
 
 
   def setLeagueResults(self, data):
+    """
+
+    :param data:
+    :return:
+    """
     ids = self.get_one(data['id'])
-    print(ids)
-    # if ids:
-    #   for i in ids:
-    #     if i['id'] != data['id']:
-    #       result = self.insert_one(data)
-    #       return result.inserted_id
-    # else:
-    #   result = self.insert_one(data)
-    #   print(result, data['id'])
-    #   return result
+    if ids.count() != 0:
+      for i in ids:
+        if i['id'] == data['id']:
+          print "[INFO][setLeagueResults] Result of fixture %s already in database." % i['id']
+    else:
+      result = self.insert_one(data)
+      return result
