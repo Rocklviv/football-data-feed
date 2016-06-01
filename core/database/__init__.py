@@ -1,4 +1,7 @@
+import logging
 from pymongo import MongoClient
+
+log = logging.getLogger('root')
 
 class Database():
 
@@ -35,7 +38,7 @@ class Database():
   def insert_one(self, data):
     res = self.collection.insert_one(data)
     if res:
-      print "[INFO][insert_one] %s" % res.inserted_id
+      log.info("[INFO][insert_one] %s" % res.inserted_id)
 
   def insert_many(self, data):
     self.collection.insert_many(data)

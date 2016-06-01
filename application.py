@@ -1,18 +1,25 @@
+import logging
 from core.controller import FootballDataController
 from time import time, sleep
+from core.logger import LogHandler
+
+log = logging.getLogger('root')
+log.setLevel(logging.DEBUG)
+log.addHandler(LogHandler())
 
 df = FootballDataController()
 
-def runApp():
+def startApplication():
   start = time()
-  print('Getting leagues for 2015 year.')
+  log.info('Getting leagues for 2015 year.')
   df.getLeagues('2015')
-  print('Getting teams by league.')
+  log.info('Getting teams by league.')
   df.getTeams()
-  print('Getting squads by team.')
+  log.info('Getting squads by team.')
   df.getSquads()
+  log.info('Getting fixtures and results.')
   df.getFixtures()
-  print ('---------- Executed after: %s seconds. ----------' % (time() - start))
+  log.info('---------- Executed after: %s seconds. ----------' % (time() - start))
 
 if __name__ == '__main__':
-  runApp()
+  startApplication()

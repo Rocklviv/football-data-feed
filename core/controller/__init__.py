@@ -1,10 +1,10 @@
-import os
+import logging
 import json
-from platform import platform
-from time import sleep
 
 from core.system.football_data import FootballData
 from core.model import FootballDataModel
+
+log = logging.getLogger('root')
 
 class FootballDataController():
 

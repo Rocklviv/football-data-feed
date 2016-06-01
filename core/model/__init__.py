@@ -1,4 +1,7 @@
+import logging
 from core.database import Database
+
+log = logging.getLogger('root')
 
 class FootballDataModel(Database):
 
@@ -18,7 +21,7 @@ class FootballDataModel(Database):
           if v['lastUpdated'] != i['lastUpdated']:
             self.update_one(i)
           else:
-            print('League ID: %s, Name: %s is up to date.' % (i['id'], i['caption']))
+            log.info('League ID: %s, Name: %s is up to date.' % (i['id'], i['caption']))
       else:
         self.insert_one(i)
 
@@ -32,7 +35,7 @@ class FootballDataModel(Database):
       if result.count() == 0:
         self.insert_one(i)
       else:
-        print('Team ID: %s NAME: %s is already in base.' % (i['id'], i['name']))
+        log.info('Team ID: %s NAME: %s is already in base.' % (i['id'], i['name']))
 
 
   def getTeamsId(self):
@@ -40,16 +43,21 @@ class FootballDataModel(Database):
 
 
   def setTeamPlayers(self, data):
+    """
+
+    :param data:
+    :return:
+    """
     for i in data:
       field = {'name': i['name']}
       result = self.get_one_new(field)
-      print('Was found: %s' % result.count())
+      log.info('Player was found: %s' % result.count())
       if result.count() == 0:
         self.insert_one(i)
       else:
         for v in result:
           if v['name'] == i['name']:
-            print('Player %s from Team: %s is already in database.' % (i['name'], i['team_id']))
+            log.info('Player %s from Team: %s is already in database.' % (i['name'], i['team_id']))
           else:
             self.update_one(i)
 
@@ -83,7 +91,7 @@ class FootballDataModel(Database):
     if ids.count() != 0:
       for i in ids:
         if i['id'] == data['id']:
-          print "[INFO][setLeagueResults] Result of fixture %s already in database." % i['id']
+          log.info("Result of fixture %s already in database." % i['id'])
     else:
       result = self.insert_one(data)
       return result

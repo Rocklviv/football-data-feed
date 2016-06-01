@@ -1,5 +1,8 @@
 import time
 import requests
+import logging
+
+log = logging.getLogger('root')
 
 class FootballData():
   # TODO: Make all API calls with timeouts.
@@ -55,4 +58,4 @@ class FootballData():
       else:
         raise (Exception(req.text))
     except Exception as e:
-      print(str(e.message))
+      log.exception(str(e.message))
